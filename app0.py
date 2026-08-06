@@ -1,4 +1,3 @@
-import os
 import streamlit as st
 from planner import generate_plan
 
@@ -12,41 +11,52 @@ st.set_page_config(
 )
 
 # -----------------------------
-# Title
+# Header
 # -----------------------------
 st.title("✈️ AI Travel Planner")
 st.write("Plan your trip using Artificial Intelligence")
 
+st.markdown("---")
+
 # -----------------------------
 # User Inputs
 # -----------------------------
-destination = st.text_input("Enter Destination")
+col1, col2 = st.columns(2)
 
-days = st.number_input(
-    "Number of Days",
-    min_value=1,
-    max_value=30,
-    value=5
-)
+with col1:
+    destination = st.text_input(
+        "📍 Destination",
+        placeholder="Example: Coorg"
+    )
 
-budget = st.text_input(
-    "Budget",
-    placeholder="Example: ₹20000"
-)
+    days = st.number_input(
+        "📅 Number of Days",
+        min_value=1,
+        max_value=30,
+        value=5
+    )
 
-interests = st.text_area(
-    "Your Interests",
-    placeholder="Adventure, Food, Beaches, Culture..."
-)
+with col2:
+    budget = st.text_input(
+        "💰 Budget",
+        placeholder="Example: ₹20000"
+    )
+
+    interests = st.text_area(
+        "🎯 Interests",
+        placeholder="Adventure, Food, Nature, Culture..."
+    )
+
+st.markdown("---")
 
 # -----------------------------
-# Generate Plan
+# Generate Button
 # -----------------------------
-if st.button("Generate Travel Plan"):
+if st.button("🚀 Generate Travel Plan", use_container_width=True):
 
     if destination and budget and interests:
 
-        with st.spinner("Creating your plan..."):
+        with st.spinner("Generating your AI travel plan..."):
 
             result = generate_plan(
                 destination,
@@ -55,27 +65,10 @@ if st.button("Generate Travel Plan"):
                 interests
             )
 
-        st.success("✅ Travel Plan Generated")
+        st.success("✅ Travel Plan Generated Successfully!")
 
-        # Display Travel Plan
+        st.markdown("## 🗺️ Your Travel Plan")
         st.markdown(result)
 
-        # -----------------------------
-        # Show Destination Image
-        # -----------------------------
-        destination_name = destination.lower().strip()
-
-        image_path = f"images/{destination_name}.jpg"
-
-        if os.path.exists(image_path):
-            st.subheader(f"📍 Explore {destination.title()}")
-            st.image(
-                image_path,
-                caption=destination.title(),
-                use_container_width=True
-            )
-        else:
-            st.info(f"No image found for {destination.title()}.")
-
     else:
-        st.warning("Please fill all details.")
+        st.error("⚠️ Please fill in all the details before generating your travel plan.")
